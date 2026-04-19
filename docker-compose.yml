@@ -6,6 +6,8 @@ services:
       args:
         PORT: ${PORT:-3000}
     image: ${API_IMAGE:-wiktapi-api}
+    expose:
+      - "${PORT:-3000}"
     volumes:
       - ${DATA_VOLUME:-/mnt/volume-nbg1-1/data}:/data
     environment:
