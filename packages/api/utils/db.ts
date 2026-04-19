@@ -1,9 +1,22 @@
 import Database from "better-sqlite3";
-import { resolve } from "node:path";
+import { existsSync } from "node:fs";
+import { resolve, dirname } from "node:path";
 
 const dbPath = process.env.DATA_PATH ?? resolve("./data/wiktionary.db");
 
-console.log(`Opening database at ${dbPath}...`);
+console.log("Opening database at", dbPath);
+
+if (!existsSync(dirname(dbPath))) {
+  console.error("Error: Directory", dirname(dbPath), "does not exist.");
+  console.error("Make sure your volume is mounted at the correct path.");
+  process.exit(1);
+}
+
+if (!existsSync(dbPath)) {
+  console.error("Error: Database file", dbPath, "not found.");
+  console.error("Run the import worker first: docker compose run worker import");
+  process.exit(1);
+}
 
 export const db = new Database(dbPath, { readonly: true });
 

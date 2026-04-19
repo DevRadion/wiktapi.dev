@@ -64,6 +64,8 @@ ENV DATA_PATH=/data/wiktionary.db \
     PORT=3000 \
     HOST=0.0.0.0
 
+RUN mkdir -p /data
+
 EXPOSE ${PORT}
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
