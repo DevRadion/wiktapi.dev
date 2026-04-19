@@ -40,7 +40,6 @@ COPY packages/api/scripts ./packages/api/scripts
 COPY packages/api/utils ./packages/api/utils
 COPY packages/api/package.json ./packages/api/package.json
 
-# Scripts resolve ./data relative to packages/api/
 WORKDIR /app/packages/api
 
 VOLUME ["/app/packages/api/data"]
@@ -48,16 +47,27 @@ VOLUME ["/app/packages/api/data"]
 # ---- runtime ----
 FROM node:22-slim
 
+ARG PORT=3000
+
 WORKDIR /app
 
 COPY --from=build /app/packages/api/.output ./
 COPY --from=deps /app/node_modules/.pnpm/better-sqlite3@*/node_modules/better-sqlite3/build/Release/better_sqlite3.node ./server/node_modules/better-sqlite3/build/better_sqlite3.node
 
-# The database is expected to be mounted at runtime.
-# Override with: docker run -e DATA_PATH=/data/wiktionary.db -v /host/path:/data ...
-ENV DATA_PATH=/data/wiktionary.db
+# Runtime-configurable environment variables
+# DATA_PATH  — path to the SQLite database file (default: /data/wiktionary.db)
+# PORT       — HTTP server port (default: 3000)
+# HOST       — HTTP server bind address (default: 0.0.0.0)
+# DATA_DIR   — directory for worker scripts (download/import/index)
+ENV DATA_PATH=/data/wiktionary.db \
+    PORT=3000 \
+    HOST=0.0.0.0
+
 VOLUME ["/data"]
 
-EXPOSE 3000
+EXPOSE ${PORT}
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:${PORT}/health || exit 1
 
 CMD ["node", "server/index.mjs"]

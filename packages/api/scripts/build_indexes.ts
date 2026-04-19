@@ -11,8 +11,8 @@ import Database from "better-sqlite3";
 import { ENTRIES_INDEXES_DDL } from "../utils/schema.ts";
 import { resolve } from "node:path";
 
-const DATA_DIR = resolve("./data");
-const DEFAULT_DB_PATH = resolve(DATA_DIR, "wiktionary.db");
+const DATA_DIR = process.env.DATA_DIR ?? resolve("./data");
+const DEFAULT_DB_PATH = process.env.DATA_PATH ?? resolve(DATA_DIR, "wiktionary.db");
 
 function parseArgs(): { dbPath: string } {
   const args = process.argv.slice(2);

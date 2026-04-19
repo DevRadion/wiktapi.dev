@@ -3,12 +3,27 @@ services:
     build:
       context: .
       target: runtime
+      args:
+        PORT: ${PORT:-3000}
     image: ${API_IMAGE:-wiktapi-api}
     volumes:
       - data:/data
     ports:
-      - "3000:3000"
+      - "${PORT:-3000}:${PORT:-3000}"
+    environment:
+      DATA_PATH: ${DATA_PATH:-/data/wiktionary.db}
+      PORT: ${PORT:-3000}
+      HOST: ${HOST:-0.0.0.0}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT:-3000}/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
     restart: unless-stopped
+    labels:
+      coolify.managed: "true"
+      coolify.service: "wiktapi-api"
 
   worker:
     build:
@@ -17,8 +32,13 @@ services:
     image: ${WORKER_IMAGE:-wiktapi-worker}
     volumes:
       - data:/app/packages/api/data
+    environment:
+      DATA_DIR: ${DATA_DIR:-/app/packages/api/data}
     profiles:
       - tools
+    labels:
+      coolify.managed: "true"
+      coolify.service: "wiktapi-worker"
 
 volumes:
   data:

@@ -19,7 +19,8 @@ import { createGunzip } from "node:zlib";
 import { pipeline } from "node:stream/promises";
 import { Readable } from "node:stream";
 
-const JSONL_DIR = resolve("./data/jsonl");
+const DATA_DIR = process.env.DATA_DIR ?? resolve("./data");
+const JSONL_DIR = resolve(DATA_DIR, "jsonl");
 
 // All editions available on kaikki.org/dictionary/rawdata.html
 const ALL_EDITIONS = [
