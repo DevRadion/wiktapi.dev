@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1
-
 # ---- deps ----
 FROM node:22 AS deps
 
@@ -45,7 +43,9 @@ WORKDIR /app/packages/api
 VOLUME ["/app/packages/api/data"]
 
 # ---- runtime ----
-FROM node:22-slim
+FROM node:22-slim AS runtime
+
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 ARG PORT=3000
 
