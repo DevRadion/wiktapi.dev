@@ -7,7 +7,7 @@ services:
         PORT: ${PORT:-3000}
     image: ${API_IMAGE:-wiktapi-api}
     volumes:
-      - data:/data
+      - ${DATA_VOLUME:-data}:/data
     ports:
       - "${PORT:-3000}:${PORT:-3000}"
     environment:
@@ -31,9 +31,10 @@ services:
       target: worker
     image: ${WORKER_IMAGE:-wiktapi-worker}
     volumes:
-      - data:/app/packages/api/data
+      - ${DATA_VOLUME:-data}:/data
     environment:
-      DATA_DIR: ${DATA_DIR:-/app/packages/api/data}
+      DATA_DIR: ${DATA_DIR:-/data}
+      DATA_PATH: ${DATA_PATH:-/data/wiktionary.db}
     profiles:
       - tools
     labels:

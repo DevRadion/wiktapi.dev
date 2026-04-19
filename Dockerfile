@@ -60,10 +60,9 @@ COPY --from=deps /app/node_modules/.pnpm/better-sqlite3@*/node_modules/better-sq
 # HOST       — HTTP server bind address (default: 0.0.0.0)
 # DATA_DIR   — directory for worker scripts (download/import/index)
 ENV DATA_PATH=/data/wiktionary.db \
+    DATA_DIR=/data \
     PORT=3000 \
     HOST=0.0.0.0
-
-VOLUME ["/data"]
 
 EXPOSE ${PORT}
 
