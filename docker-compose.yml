@@ -7,7 +7,7 @@ services:
         PORT: ${PORT:-3000}
     image: ${API_IMAGE:-wiktapi-api}
     volumes:
-      - ${DATA_VOLUME:-data}:/data
+      - wiktapi-data:/data
     ports:
       - "${PORT:-3000}:${PORT:-3000}"
     environment:
@@ -31,7 +31,7 @@ services:
       target: worker
     image: ${WORKER_IMAGE:-wiktapi-worker}
     volumes:
-      - ${DATA_VOLUME:-data}:/data
+      - wiktapi-data:/data
     environment:
       DATA_DIR: ${DATA_DIR:-/data}
       DATA_PATH: ${DATA_PATH:-/data/wiktionary.db}
@@ -42,4 +42,4 @@ services:
       coolify.service: "wiktapi-worker"
 
 volumes:
-  data:
+  wiktapi-data:

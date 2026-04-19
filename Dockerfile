@@ -40,8 +40,6 @@ COPY packages/api/package.json ./packages/api/package.json
 
 WORKDIR /app/packages/api
 
-VOLUME ["/app/packages/api/data"]
-
 # ---- runtime ----
 FROM node:22-slim AS runtime
 

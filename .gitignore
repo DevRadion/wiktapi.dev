@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 .env
+docker-compose.override.yml
 dist
 dist-ssr
 *.local
